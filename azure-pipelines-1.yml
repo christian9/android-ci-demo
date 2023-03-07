@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- Dev
+- Develop
 
 pool:
   vmImage: ubuntu-latest
@@ -27,3 +27,10 @@ steps:
   inputs:
    targetPath: '$(Build.ArtifactStagingDirectory)/drop'
    artifactName: ArtifactA
+- task: AzureFileCopy@5
+  inputs:
+    SourcePath: '*'
+    azureSubscription: 'ExternalProjects(a2c00afd-2b96-4016-9f25-104083500e21)'
+    Destination: 'AzureBlob'
+    storage: 'releasesst'
+    ContainerName: 'todoreleases'
