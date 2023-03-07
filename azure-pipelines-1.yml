@@ -29,7 +29,7 @@ steps:
    artifactName: ArtifactA
 - task: AzureFileCopy@5
   inputs:
-    SourcePath: '$(Build.ArtifactStagingDirectory)/drop'
+    SourcePath: '$(Build.ArtifactStagingDirectory)'
     azureSubscription: 'ExternalProjects(a2c00afd-2b96-4016-9f25-104083500e21)'
     Destination: 'AzureBlob'
     storage: 'releasesst'
