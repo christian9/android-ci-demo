@@ -23,3 +23,7 @@ steps:
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact to Pipeline'
+  inputs:
+   targetPath: '$(Build.ArtifactStagingDirectory)/drop'
+   artifactName: ArtifactA
