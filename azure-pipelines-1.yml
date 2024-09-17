@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- Develop
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- task: Gradle@2
+  inputs:
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact to Pipeline'
+  inputs:
+   targetPath: '$(Build.ArtifactStagingDirectory)/drop'
+   artifactName: ArtifactA
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: '8f4c8045-40de-4e0d-87b3-fb672ddfa92b/62dbdfd4-a4b2-4644-8d0f-6368377aa4a4'
+    vstsFeedPackagePublish: 'ArtifactA'
+    versionOption: 'patch'
+- task: AzureFileCopy@5
+  inputs:
+    SourcePath: 'D:\a\1\a\app\build\outputs\apk\debug\app-debug.apk'
+    azureSubscription: 'ExternalProjects(a2c00afd-2b96-4016-9f25-104083500e21)'
+    Destination: 'AzureBlob'
+    storage: 'releasesst'
+    ContainerName: 'todoreleases'
